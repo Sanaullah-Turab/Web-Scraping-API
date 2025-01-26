@@ -1,11 +1,10 @@
 import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:8000"; // Ensure this matches your backend URL
+const BASE_URL = "http://127.0.0.1:8000";
 
 /**
- * Fetches links for a part number using the `/get-links/` API endpoint.
- * @param {string} partNumber - The part number to search for.
- * @returns {Promise<object>} - Links fetched from the API.
+ * @param {string} partNumber
+ * @returns {Promise<object>}
  */
 export async function fetchLinks(partNumber) {
   try {
@@ -20,9 +19,9 @@ export async function fetchLinks(partNumber) {
 }
 
 /**
- * Scrapes data using all available scrapers for a given part number.
- * @param {string} partNumber - The part number to scrape.
- * @returns {Promise<object>} - Scraped data from all scrapers.
+ *
+ * @param {string} partNumber
+ * @returns {Promise<object>}
  */
 export async function scrapeAllScrapers(partNumber) {
   try {
@@ -39,10 +38,10 @@ export async function scrapeAllScrapers(partNumber) {
 }
 
 /**
- * Scrapes data using specific scrapers based on provided links.
- * @param {string} partNumber - The part number to scrape.
- * @param {Array<string>} links - Array of URLs to scrape.
- * @returns {Promise<object>} - Scraped data.
+ *
+ * @param {string} partNumber
+ * @param {Array<string>} links
+ * @returns {Promise<object>}
  */
 export async function scrapeWithScrapers(partNumber, links) {
   try {
@@ -60,9 +59,9 @@ export async function scrapeWithScrapers(partNumber, links) {
 }
 
 /**
- * Scrapes data using Ollama for provided links.
- * @param {Array<string>} links - Array of URLs to scrape.
- * @returns {Promise<object>} - Scraped data.
+ *
+ * @param {Array<string>} links
+ * @returns {Promise<object>}
  */
 export async function scrapeWithOllama(links) {
   try {
@@ -77,9 +76,9 @@ export async function scrapeWithOllama(links) {
 }
 
 /**
- * Scrapes data using OpenAI for provided links.
- * @param {Array<string>} links - Array of URLs to scrape.
- * @returns {Promise<object>} - Scraped data.
+ *
+ * @param {Array<string>} links
+ * @returns {Promise<object>}
  */
 export async function scrapeWithOpenAI(links) {
   try {

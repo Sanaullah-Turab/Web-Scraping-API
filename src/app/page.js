@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default function HomePage() {
   const [partNumber, setPartNumber] = useState("");
-  const [scrapeMethod, setScrapeMethod] = useState("all"); // Default to 'all'
+  const [scrapeMethod, setScrapeMethod] = useState("all");
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
