@@ -19,7 +19,6 @@ export async function fetchLinks(partNumber) {
 }
 
 /**
- *
  * @param {string} partNumber
  * @returns {Promise<object>}
  */
@@ -38,7 +37,6 @@ export async function scrapeAllScrapers(partNumber) {
 }
 
 /**
- *
  * @param {string} partNumber
  * @param {Array<string>} links
  * @returns {Promise<object>}
@@ -59,12 +57,17 @@ export async function scrapeWithScrapers(partNumber, links) {
 }
 
 /**
- *
+ * @param {string} partNumber
  * @param {Array<string>} links
  * @returns {Promise<object>}
  */
-export async function scrapeWithOllama(links) {
+export async function scrapeWithOllama(partNumber, links) {
   try {
+    if (!links || links.length === 0)
+      throw new Error("No links provided for Ollama.");
+
+    console.log("Scraping with Ollama using links:", links);
+
     const response = await axios.post(`${BASE_URL}/scrape-with-ollama/`, {
       search_links: links,
     });
@@ -76,12 +79,17 @@ export async function scrapeWithOllama(links) {
 }
 
 /**
- *
+ * @param {string} partNumber
  * @param {Array<string>} links
  * @returns {Promise<object>}
  */
-export async function scrapeWithOpenAI(links) {
+export async function scrapeWithOpenAI(partNumber, links) {
   try {
+    if (!links || links.length === 0)
+      throw new Error("No links provided for OpenAI.");
+
+    console.log("Scraping with OpenAI using links:", links);
+
     const response = await axios.post(`${BASE_URL}/scrape-with-openai/`, {
       search_links: links,
     });
