@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import {
+  scrapeWithFallback,
+  scrapeWithScrapersOnly,
+  scrapeWithOllama,
+  scrapeWithOpenAI,
+} from "../utils/scrape";
 
 export default function HomePage() {
   const [partNumber, setPartNumber] = useState("");
@@ -13,22 +18,31 @@ export default function HomePage() {
   const handleSearch = async () => {
     setLoading(true);
     setError("");
+    setTableData([]);
 
     try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/${
-          scrapeMethod === "all"
-            ? "check-in-all-scrapers"
-            : scrapeMethod === "openai"
-            ? "scrape-with-openai/"
-            : "scrape-with-ollama/"
-        }`,
-        { part_number: partNumber }
-      );
+      let response;
 
-      setTableData(response.data.scraped_data || []);
+      switch (scrapeMethod) {
+        case "all":
+          response = await scrapeWithFallback(partNumber);
+          break;
+        case "scrapers-only":
+          response = await scrapeWithScrapersOnly(partNumber);
+          break;
+        case "ollama":
+          response = await scrapeWithOllama(partNumber);
+          break;
+        case "openai":
+          response = await scrapeWithOpenAI(partNumber);
+          break;
+        default:
+          throw new Error("Invalid scrape method selected.");
+      }
+
+      setTableData(response?.scraped_data || []);
     } catch (err) {
-      setError("Failed to fetch data. Please try again.");
+      setError(err.message || "Failed to fetch data. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -71,13 +85,15 @@ export default function HomePage() {
           onChange={(e) => setScrapeMethod(e.target.value)}
           className="px-4 py-2 border rounded-md ml-2"
         >
-          <option value="all">All Scrapers</option>
-          <option value="openai">OpenAI</option>
+          <option value="all">All Scrapers (with fallback)</option>
+          <option value="scrapers-only">Scrapers Only</option>
           <option value="ollama">Ollama</option>
+          <option value="openai">OpenAI</option>
         </select>
         <button
           onClick={handleSearch}
           className="bg-blue-500 text-white px-4 py-2 rounded-md ml-2"
+          disabled={loading || !partNumber}
         >
           {loading ? "Loading..." : "Search"}
         </button>
@@ -112,6 +128,7 @@ export default function HomePage() {
       <button
         onClick={handleDownload}
         className="bg-green-500 text-white px-4 py-2 rounded-md"
+        disabled={tableData.length === 0}
       >
         Download as Excel
       </button>
